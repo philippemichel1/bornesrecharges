@@ -66,6 +66,12 @@ struct ContentView: View {
                             }
                             
                         })
+                        // si on déplace la carte passe le bouton GPS à off 
+                        .gesture(DragGesture().onChanged({ value in
+                            if suivreUtilisateur.suivreUtilisateur == true {
+                                suivreUtilisateur.suivreUtilisateur = false
+                            }
+                        }))
                        // .onReceive(lireDonnees.listeBornes) {listeBornes in
                          //   self.tests = listeBornes
                         //}
