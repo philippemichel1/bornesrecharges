@@ -8,8 +8,9 @@
 import SwiftUI
 import UIKit
 
-@MainActor // gestion des tâches 
+@MainActor // Gestion des files attentes processeur, pour les tâches asynchrones
 class AccesDonnees:ObservableObject {
+    // tableau des données pour affichage des points sur la carte 
     @Published var listeBornes:[BorneModele] = []
     @Published var afficherCarte:Bool = false
     @Published var chargementBorbes:Bool = false
@@ -71,7 +72,6 @@ class AccesDonnees:ObservableObject {
                     //let consolidated_is_code_insee_verified = colonnes[44]
                     
                     if nom_station != "\"nom_station(9)\"" {
-                        //ligne = ligne + 1
                         let mesBornes = BorneModele(nom_station: nom_station, adresse_station: adresse_station,puissance_nominale: puissance_nominale, consolidated_longitude: consolidated_longitude, consolidated_latitude: consolidated_latitude, prise_type_ef: prise_type_ef, prise_type_2: prise_type_2, prise_type_combo_ccs: prise_type_combo_ccs, prise_type_chademo: prise_type_chademo,prise_type_autre:prise_type_autre,num_pdl:num_pdl,nbre_pdc:nbre_pdc, paiement_acte:paiement_acte, gratuit: gratuit, paiement_cb: paiement_cb,paiement_autre: paiement_autre, condition_acces: condition_acces, accessibilite_pmr:accessibilite_pmr,station_deux_roues:station_deux_roues, raccordement:raccordement)
                         
                         
