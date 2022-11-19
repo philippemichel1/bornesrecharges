@@ -26,6 +26,9 @@ struct Ressources {
         case racordement = "cable.connector.horizontal"
         case puissance_nominale = "bolt.fill"
         case nbr_bornes = "car.2.fill"
+        case aucunFiltre = "tray.and.arrow.up.fill"
+        case filtre = "tray.and.arrow.down.fill"
+        
         
         // Liste des urls (images)
         enum urlString:String {

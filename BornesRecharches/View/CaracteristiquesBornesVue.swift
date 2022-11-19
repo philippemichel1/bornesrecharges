@@ -111,6 +111,9 @@ struct CaracteristiquesBornesVue: View {
                     
                 }// fin du for
             } // liste
+            .onDisappear {
+                infoComplementaireAffichage.removeAll()
+            }
         } // fermeture Zstack
     }
     

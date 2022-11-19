@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var montrerFenetre:Bool = false // pour suppression 
     @State private var borneSelectionAffichee:Bool = false
     @State private var valeurPuissance:String = ""
+    @State private var fenetreFiltre:Bool = false
     
     //parametre écran
     let milieu = UIScreen.main.bounds.height / 2
@@ -72,9 +73,6 @@ struct ContentView: View {
                                 suivreUtilisateur.suivreUtilisateur = false
                             }
                         }))
-                       // .onReceive(lireDonnees.listeBornes) {listeBornes in
-                         //   self.tests = listeBornes
-                        //}
                         //.ignoresSafeArea(.container, edges: [.top, .vertical])
                         .ignoresSafeArea(.all)
                         // ferme la vue popup de la carte si on
@@ -96,6 +94,21 @@ struct ContentView: View {
                                     .foregroundColor(suivreUtilisateur.suivreUtilisateur ? .green : .red)
                             }
                         })
+                        // bouton localisation villes // tests
+                        .overlay(alignment:.topLeading,content: {
+                            Button {
+                                self.fenetreFiltre.toggle()
+                            } label: {
+                                Image(systemName: (fenetreFiltre) ? Ressources.image.filtre.rawValue : Ressources.image.aucunFiltre.rawValue)
+                                    .padding()
+                                    .background(.black.opacity(0.60))
+                                    .font(.title2)
+                                    .clipShape(Circle())
+                                    .foregroundColor(fenetreFiltre ? .green : .red)
+                            }
+                            
+                        })
+                        //fenetre sheet detail Borne carateristique
                         .sheet(isPresented: $montrerPopup) {
                             ZStack() {
                                 CaracteristiquesBornesVue()
@@ -139,7 +152,7 @@ struct ContentView: View {
                 }
             }
         } // fin du if  lire borne
-        
+
         
         //} // VStack
         // execute ne tâche chargement des donnée

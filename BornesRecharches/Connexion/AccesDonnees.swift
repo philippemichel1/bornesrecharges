@@ -12,14 +12,14 @@ import UIKit
 class AccesDonnees:ObservableObject {
     // tableau des données pour affichage des points sur la carte 
     @Published var listeBornes:[BorneModele] = []
+    // tests à réaliser avec maxime 
+    //var testBornes:[BorneModele] = []
     @Published var afficherCarte:Bool = false
     @Published var chargementBorbes:Bool = false
     @Published var ChargementExplication = "Chargement en cours"
     // lecture du fichier csv
     
     func lectureDonnees() async throws {
-        //Task.init() {
-        //let statusTache = Task { () -> String in
         let statusTache = Task { () in
             if let sourceFichier = URL(string: "https://titastus.com/wp-content/uploads/titastusdev/bornesrecharges/bornesrecharges.csv") {
                 for try await line in sourceFichier.lines {
@@ -77,6 +77,8 @@ class AccesDonnees:ObservableObject {
                         
                         //DispatchQueue.main.async {
                             self.listeBornes.append(mesBornes)
+                        // tests à réaliser avec maxime
+                       // testBornes.append(mesBornes)
                            //self.chargementBorbes = true
                         //}
                     }
@@ -88,8 +90,13 @@ class AccesDonnees:ObservableObject {
         
             switch resultatTache {
             case .success( _):
+                // tests à réaliser avec maxime 
+                //DispatchQueue.main.async {
                     self.chargementBorbes = true
                     self.ChargementExplication = "Chargement terminé"
+                // tests à réaliser avec maxime
+                   // self.listeBornes = self.testBornes
+                //}
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
                     self.afficherCarte = true
                  }
