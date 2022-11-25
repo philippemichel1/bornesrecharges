@@ -14,7 +14,7 @@ struct ContentView: View {
     @StateObject var suivreUtilisateur:SuiviUtilisateurViewModel = SuiviUtilisateurViewModel(CLLocation(latitude: 0, longitude: 0))
     @State private var montrerPopup:Bool = false
     @State private var BorneSelectionnee:String = ""
-    @State private var montrerFenetre:Bool = false // pour suppression 
+    @State private var montrerFenetre:Bool = false // pour suppression
     @State private var borneSelectionAffichee:Bool = false
     @State private var valeurPuissance:String = ""
     @State private var fenetreFiltre:Bool = false
@@ -41,7 +41,7 @@ struct ContentView: View {
                         //ZStack {
                         // Map avec annotation
                         Map(coordinateRegion: $suivreUtilisateur.coordoneGeo, interactionModes: .all, showsUserLocation: true, userTrackingMode: .none, annotationItems: lireDonnees.listeBornes, annotationContent: { mesBornes in
-
+                            
                             MapAnnotation(coordinate: mesBornes.coordonneGeo(), anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
                                 // exemple avec onTapeGesture
                                 Image(systemName: Ressources.image.borneRecharge.rawValue)
@@ -55,7 +55,29 @@ struct ContentView: View {
                                             self.montrerPopup = true
                                         }
                                     }
-                                //////////////
+                                //affichage fenetre sheet demie hauteur detail Borne carateristique
+                                    .sheet(isPresented: $montrerPopup) {
+                                        ZStack() {
+                                            CaracteristiquesBornesVue()
+                                                .frame(height:UIScreen.main.bounds.width - 10)
+                                                .presentationDetents([.fraction(0.49)])
+                                                .overlay(alignment:.topTrailing,content:  {
+                                                    Button {
+                                                        self.montrerPopup = false
+                                                    } label: {
+                                                        Image(systemName: Ressources.image.fermer.rawValue)
+                                                            .padding(5)
+                                                            .font(.title2)
+                                                            .foregroundColor(.primary)
+                                                            .clipShape(Circle())
+                                                            .padding(5)
+                                                    }
+                                                })
+                                        }
+                                        
+                                    }//fin carateristique bornes
+                                
+                                // fenetre montrer popup sur carte
                                 if montrerPopup {
                                     if mesBornes.nom_station == BorneSelectionnee {
                                         ZStack(alignment: .top) {
@@ -67,7 +89,7 @@ struct ContentView: View {
                             }
                             
                         })
-                        // si on déplace la carte passe le bouton GPS à off 
+                        // si on déplace la carte passe le bouton GPS à off
                         .gesture(DragGesture().onChanged({ value in
                             if suivreUtilisateur.suivreUtilisateur == true {
                                 suivreUtilisateur.suivreUtilisateur = false
@@ -108,28 +130,6 @@ struct ContentView: View {
                             }
                             
                         })
-                        //fenetre sheet detail Borne carateristique
-                        .sheet(isPresented: $montrerPopup) {
-                            ZStack() {
-                                CaracteristiquesBornesVue()
-                                    .frame(height:UIScreen.main.bounds.width - 10)
-                                    .presentationDetents([.fraction(0.49)])
-                                    .overlay(alignment:.topTrailing,content:  {
-                                        Button {
-                                            self.montrerPopup = false
-                                        } label: {
-                                            Image(systemName: Ressources.image.fermer.rawValue)
-                                                .padding(5)
-                                                .font(.title2)
-                                                .foregroundColor(.primary)
-                                                .clipShape(Circle())
-                                                .padding(5)
-                                        }
-                                    })
-                            }
-                            
-                        }
-                       
                         
                     } // fin Vstack
                     
@@ -152,7 +152,7 @@ struct ContentView: View {
                 }
             }
         } // fin du if  lire borne
-
+        
         
         //} // VStack
         // execute ne tâche chargement des donnée
