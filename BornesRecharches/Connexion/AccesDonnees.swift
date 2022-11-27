@@ -79,7 +79,7 @@ import UIKit
                         await MainActor.run {
                             self.listeBornes.append(mesBornes)
                             
-                           
+                            
                             // tests avec chargement du tableau en une fois même probleme
                             //self.testBornes.append(mesBornes)
                             //self.chargementBorbes = true
@@ -94,7 +94,7 @@ import UIKit
         switch resultatTache {
         case .success( _):
             // tests à réaliser
-        //Task {
+            //Task {
             await MainActor.run {
                 self.chargementBorbes = true
                 self.ChargementExplication = "Chargement terminé"
@@ -106,7 +106,7 @@ import UIKit
                     self.afficherCarte = true
                 }
             }
-        //} // fin de la tâche 
+            //} // fin de la tâche
             
             
         case .failure(let error):
