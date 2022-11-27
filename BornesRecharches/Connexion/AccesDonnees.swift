@@ -79,7 +79,8 @@ import UIKit
                         await MainActor.run {
                             self.listeBornes.append(mesBornes)
                             
-                            // tests à réaliser avec maxime
+                           
+                            // tests avec chargement du tableau en une fois même probleme
                             //self.testBornes.append(mesBornes)
                             //self.chargementBorbes = true
                         }
@@ -92,20 +93,20 @@ import UIKit
         
         switch resultatTache {
         case .success( _):
-            // tests à réaliser avec maxime
-            //Task {
+            // tests à réaliser
+        //Task {
             await MainActor.run {
                 self.chargementBorbes = true
                 self.ChargementExplication = "Chargement terminé"
                 
-                // tests à réaliser avec maxime
+                // test de chargement du tableau en une fois
                 //self.listeBornes = self.testBornes
                 //}
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
                     self.afficherCarte = true
                 }
             }
-            //}
+        //} // fin de la tâche 
             
             
         case .failure(let error):
