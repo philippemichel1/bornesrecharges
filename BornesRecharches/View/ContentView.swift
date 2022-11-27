@@ -35,6 +35,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
+            
             if (self.lireDonnees.afficherCarte) == true {
                 GeometryReader { geo in
                     VStack {
@@ -50,8 +51,8 @@ struct ContentView: View {
                                     .animation(Animation.linear(duration: 0.2))
                                     .onTapGesture {
                                         withAnimation {
-                                            BorneSelectionnee = mesBornes.nom_station
-                                            transfertInfoBorne(infoBorne: mesBornes)
+                                           BorneSelectionnee = mesBornes.nom_station
+                                           transfertInfoBorne(infoBorne: mesBornes)
                                             self.montrerPopup = true
                                         }
                                     }

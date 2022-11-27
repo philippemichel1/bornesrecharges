@@ -8,12 +8,12 @@
 import SwiftUI
 import UIKit
 
-@MainActor // Gestion des files attentes processeur, pour les tâches asynchrones
-class AccesDonnees:ObservableObject {
-    // tableau des données pour affichage des points sur la carte 
+// @MainActor Gestion des files attentes processeur, pour les tâches asynchrones
+@MainActor class AccesDonnees:ObservableObject {
+    // tableau des données pour affichage des points sur la carte
     @Published var listeBornes:[BorneModele] = []
-    // tests à réaliser avec maxime 
-    //var testBornes:[BorneModele] = []
+    // tests à réaliser avec maxime
+    var testBornes:[BorneModele] = []
     @Published var afficherCarte:Bool = false
     @Published var chargementBorbes:Bool = false
     @Published var ChargementExplication = "Chargement en cours"
@@ -76,11 +76,13 @@ class AccesDonnees:ObservableObject {
                         
                         
                         //DispatchQueue.main.async {
+                        await MainActor.run {
                             self.listeBornes.append(mesBornes)
-                        // tests à réaliser avec maxime
-                       // testBornes.append(mesBornes)
-                           //self.chargementBorbes = true
-                        //}
+                            
+                            // tests à réaliser avec maxime
+                            //self.testBornes.append(mesBornes)
+                            //self.chargementBorbes = true
+                        }
                     }
                 } // fin for
             } // fin du fin
@@ -88,25 +90,31 @@ class AccesDonnees:ObservableObject {
         }
         let resultatTache = await statusTache.result
         
-            switch resultatTache {
-            case .success( _):
-                // tests à réaliser avec maxime 
-                //DispatchQueue.main.async {
-                    self.chargementBorbes = true
-                    self.ChargementExplication = "Chargement terminé"
+        switch resultatTache {
+        case .success( _):
+            // tests à réaliser avec maxime
+            //Task {
+            await MainActor.run {
+                self.chargementBorbes = true
+                self.ChargementExplication = "Chargement terminé"
+                
                 // tests à réaliser avec maxime
-                   // self.listeBornes = self.testBornes
+                //self.listeBornes = self.testBornes
                 //}
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
                     self.afficherCarte = true
-                 }
-                
-                   
-                
-            case .failure(let error):
+                }
+            }
+            //}
+            
+            
+        case .failure(let error):
+            await MainActor.run {
                 self.ChargementExplication = "Error: \(error.localizedDescription)"
                 self.chargementBorbes = false
             }
+            
+        }
         
         //}
     }
