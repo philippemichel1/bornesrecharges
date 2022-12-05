@@ -25,7 +25,7 @@ struct PinAnnotation: View {
                     .scaledToFit()
                     .frame(width: tailleImage, height: tailleImage)
                     .font(.headline)
-                    .foregroundColor(.red)
+                    .foregroundColor(Color("MonRouge"))
                     .padding(6)
                     .background()
                     .cornerRadius(36)
