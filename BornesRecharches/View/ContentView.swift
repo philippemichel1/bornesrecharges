@@ -47,8 +47,8 @@ struct ContentView: View {
                                 // exemple avec onTapeGesture
                                 // Image(systemName: Ressources.image.borneRecharge.rawValue)
                                 // .foregroundColor(.red)
-                                PinAnnotation()
-                                    .opacity(montrerPopup ? 0 : 1)
+                                PinAnnotation(masquerAnnotation: $montrerPopup)
+                                    //.opacity(montrerPopup ? 0 : 1)
                                     .animation(Animation.linear(duration: 0.2))
                                     .onTapGesture {
                                         withAnimation {

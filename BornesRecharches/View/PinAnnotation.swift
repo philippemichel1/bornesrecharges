@@ -11,6 +11,7 @@ struct PinAnnotation: View {
     let tailleTrameCercle:CGFloat = 35
     let tailleImage:CGFloat = 12
     let tailleTriangle:CGFloat = 10
+    @Binding var masquerAnnotation:Bool
     
     var body: some View {
         VStack(spacing: 0)  {
@@ -18,6 +19,7 @@ struct PinAnnotation: View {
                 Circle()
                     .frame(width: tailleTrameCercle, height:tailleTrameCercle)
                     .foregroundColor(.red)
+                    .opacity(masquerAnnotation ? 0 : 1)
                 Image(systemName: Ressources.image.borneRecharge.rawValue )
                     .resizable()
                     .scaledToFit()
@@ -27,6 +29,7 @@ struct PinAnnotation: View {
                     .padding(6)
                     .background()
                     .cornerRadius(36)
+                    .opacity(masquerAnnotation ? 0 : 1)
             }
             Image(systemName: "triangle.fill")
                 .resizable()
@@ -36,16 +39,18 @@ struct PinAnnotation: View {
                 .rotationEffect(Angle(degrees: 180))
                 .offset(y:-3)
                 .padding(.bottom, 40)
+                .opacity(masquerAnnotation ? 0 : 1)
 
         }
     }
+        
 }
 
 struct PinAnnotation_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            PinAnnotation()
+            PinAnnotation(masquerAnnotation: .constant(false))
         }
         
     }
