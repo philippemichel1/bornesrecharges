@@ -45,14 +45,15 @@ struct ContentView: View {
                             
                             MapAnnotation(coordinate: mesBornes.coordonneGeo(), anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
                                 // exemple avec onTapeGesture
-                                Image(systemName: Ressources.image.borneRecharge.rawValue)
-                                    .foregroundColor(.red)
+                                // Image(systemName: Ressources.image.borneRecharge.rawValue)
+                                // .foregroundColor(.red)
+                                PinAnnotation()
                                     .opacity(montrerPopup ? 0 : 1)
                                     .animation(Animation.linear(duration: 0.2))
                                     .onTapGesture {
                                         withAnimation {
-                                           BorneSelectionnee = mesBornes.nom_station
-                                           transfertInfoBorne(infoBorne: mesBornes)
+                                            BorneSelectionnee = mesBornes.nom_station
+                                            transfertInfoBorne(infoBorne: mesBornes)
                                             self.montrerPopup = true
                                         }
                                     }
