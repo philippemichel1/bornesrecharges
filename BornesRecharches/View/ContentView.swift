@@ -10,7 +10,6 @@ import MapKit
 
 struct ContentView: View {
     @StateObject var lireDonnees:AccesDonnees = AccesDonnees()
-    @StateObject var valeurAleatoire:Aleatoire = Aleatoire(hauteurAnimation: 200)
     @StateObject var suivreUtilisateur:SuiviUtilisateurViewModel = SuiviUtilisateurViewModel(CLLocation(latitude: 0, longitude: 0))
     @State private var montrerPopup:Bool = false
     @State private var BorneSelectionnee:String = ""
@@ -24,15 +23,6 @@ struct ContentView: View {
     let largeurEcran = UIScreen.main.bounds.width
     let hauteurEcran = UIScreen.main.bounds.height
     
-    // partie animation
-     //paramétre pour animation capsule
-    @State private var capsuleLargeur:CGFloat = 15
-    @State private var capsuleHauteur0:CGFloat = 100
-    @State private var capsuleHauteur1:CGFloat = 100
-    @State private var capsuleHauteur2:CGFloat = 100
-    @State private var couleurCapsule:[Color] = [Color("MonRouge"),.gray, Color("MonVert")]
-    @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-
     var body: some View {
         NavigationView {
             
@@ -48,7 +38,7 @@ struct ContentView: View {
                                 // Image(systemName: Ressources.image.borneRecharge.rawValue)
                                 // .foregroundColor(.red)
                                 PinAnnotation(masquerAnnotation: $montrerPopup)
-                                    //.opacity(montrerPopup ? 0 : 1)
+                                //.opacity(montrerPopup ? 0 : 1)
                                     .animation(Animation.linear(duration: 0.2))
                                     .onTapGesture {
                                         withAnimation {
@@ -84,7 +74,7 @@ struct ContentView: View {
                                     if mesBornes.nom_station == BorneSelectionnee {
                                         ZStack(alignment: .top) {
                                             DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
-                                                //.offset(y:-milieu)
+                                            //.offset(y:-milieu)
                                             
                                         }
                                     }
@@ -139,40 +129,15 @@ struct ContentView: View {
                 }// fin du géo
                 
             } else {
-                // le if est déprecier
+                // vue de chargement des bornes
+                VueChargementBornes(statutChargement: lireDonnees.ChargementExplication)
                 
-                
-                HStack(spacing:0){
-                    // annimation de chargement
-                    VueCapsule(largeur: $capsuleLargeur, hauteur: $capsuleHauteur0, color: $couleurCapsule[0])
-                    VueCapsule(largeur: $capsuleLargeur, hauteur: $capsuleHauteur1, color: $couleurCapsule[1])
-                    VueCapsule(largeur: $capsuleLargeur, hauteur: $capsuleHauteur2, color: $couleurCapsule[2])
-                    HStack(spacing:0){
-                        Text("\(lireDonnees.ChargementExplication)")
-                            .font(.caption2)
-                            .multilineTextAlignment(.leading)
-                            .frame(width: 200,height: 100)
-                    }
-
-                }
             }
         } // fin du if  lire borne
-        
-        
         //} // VStack
         // execute ne tâche chargement des donnée
         .task {
             try? await lireDonnees.lectureDonnees()
-        }
-        
-        
-        
-        // timer pour animation
-        .animation((Animation.linear))
-        .onReceive(timer) { time in
-            capsuleHauteur0 = valeurAleatoire.hauteurAleatoire()
-            capsuleHauteur1 = valeurAleatoire.hauteurAleatoire()
-            capsuleHauteur2 = valeurAleatoire.hauteurAleatoire()
         }
     } // fin du navigationView
 }
