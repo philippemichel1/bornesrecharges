@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 
 class Aleatoire : ObservableObject {
-    @Published var Hauteur:CGFloat
+    @Published var hauteurAnimation:CGFloat
     
-    init(Hauteur: CGFloat) {
-        self.Hauteur = Hauteur
+    init(hauteurAnimation: CGFloat) {
+        self.hauteurAnimation = hauteurAnimation
     }
     
     func hauteurAleatoire() -> CGFloat {
-        return CGFloat(arc4random_uniform(UInt32(Hauteur)))
+        return CGFloat(arc4random_uniform(UInt32(hauteurAnimation)))
     }
     
     

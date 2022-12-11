@@ -10,7 +10,7 @@ import MapKit
 
 struct ContentView: View {
     @StateObject var lireDonnees:AccesDonnees = AccesDonnees()
-    @StateObject var valeurAleatoire:Aleatoire = Aleatoire(Hauteur: 200)
+    @StateObject var valeurAleatoire:Aleatoire = Aleatoire(hauteurAnimation: 200)
     @StateObject var suivreUtilisateur:SuiviUtilisateurViewModel = SuiviUtilisateurViewModel(CLLocation(latitude: 0, longitude: 0))
     @State private var montrerPopup:Bool = false
     @State private var BorneSelectionnee:String = ""
