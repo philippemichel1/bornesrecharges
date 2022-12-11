@@ -12,7 +12,6 @@ struct CaracteristiquesBornesVue: View {
     
     
     //nouvellevue vue //
-    @StateObject var nouvelleVua:Aleatoire = Aleatoire()
     @StateObject var accesDonnees:AccesDonnees = AccesDonnees()
     
     var largeurTrame:CGFloat = 70

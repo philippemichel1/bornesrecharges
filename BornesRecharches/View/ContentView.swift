@@ -10,7 +10,7 @@ import MapKit
 
 struct ContentView: View {
     @StateObject var lireDonnees:AccesDonnees = AccesDonnees()
-    @StateObject var valeurAleatoire:Aleatoire = Aleatoire()
+    @StateObject var valeurAleatoire:Aleatoire = Aleatoire(Hauteur: 200)
     @StateObject var suivreUtilisateur:SuiviUtilisateurViewModel = SuiviUtilisateurViewModel(CLLocation(latitude: 0, longitude: 0))
     @State private var montrerPopup:Bool = false
     @State private var BorneSelectionnee:String = ""
@@ -84,6 +84,7 @@ struct ContentView: View {
                                     if mesBornes.nom_station == BorneSelectionnee {
                                         ZStack(alignment: .top) {
                                             DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
+                                                //.offset(y:-milieu)
                                             
                                         }
                                     }
