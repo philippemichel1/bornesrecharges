@@ -25,14 +25,14 @@ struct ContentView: View {
     let hauteurEcran = UIScreen.main.bounds.height
     
     // partie animation
-    // paramétre pour animation capsule
+     //paramétre pour animation capsule
     @State private var capsuleLargeur:CGFloat = 15
     @State private var capsuleHauteur0:CGFloat = 100
     @State private var capsuleHauteur1:CGFloat = 100
     @State private var capsuleHauteur2:CGFloat = 100
     @State private var couleurCapsule:[Color] = [Color("MonRouge"),.gray, Color("MonVert")]
     @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    
+
     var body: some View {
         NavigationView {
             
@@ -140,6 +140,8 @@ struct ContentView: View {
                 
             } else {
                 // le if est déprecier
+                
+                
                 HStack(spacing:0){
                     // annimation de chargement
                     VueCapsule(largeur: $capsuleLargeur, hauteur: $capsuleHauteur0, color: $couleurCapsule[0])
@@ -151,7 +153,7 @@ struct ContentView: View {
                             .multilineTextAlignment(.leading)
                             .frame(width: 200,height: 100)
                     }
-                    
+
                 }
             }
         } // fin du if  lire borne
