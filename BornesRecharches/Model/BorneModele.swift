@@ -38,16 +38,7 @@ struct BorneModele:Identifiable {
         return CLLocationCoordinate2D(latitude: consolidated_latitude, longitude: consolidated_longitude)
     }
 }
-// Struct pour affichage des données dans la vue caractique des bornes
-struct ElementModel:Identifiable {
-    var id:UUID = UUID()
-    var imageSTR:String
-    var imageTelecharger:Bool
-    var libelleTexte:String
-    var libelleDynamique:Bool
-    var pictogrammeDynamique:Bool
-    var infoBorne:String
-}
+
 
 
 
