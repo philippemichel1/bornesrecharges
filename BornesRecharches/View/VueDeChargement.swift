@@ -1,14 +1,13 @@
 //
-//  VueChargementBornes.swift
+//  VueDeChargement.swift
 //  BornesRecharches
 //
-//  Created by Philippe MICHEL on 11/12/2022.
+//  Created by Philippe MICHEL on 12/12/2022.
 //
 
 import SwiftUI
 
-struct VueChargementBornes: View {
-    
+struct VueDeChargement: View {
     @StateObject var valeurAleatoire:Aleatoire = Aleatoire(hauteurAnimation: 200)
     let nbrCapsule = 2
     @State private var hauteurCapsule:[CGFloat] = [145,75,126]
@@ -34,9 +33,8 @@ struct VueChargementBornes: View {
     }
 }
 
-
-struct VueChargementBornes_Previews: PreviewProvider {
+struct VueDeChargement_Previews: PreviewProvider {
     static var previews: some View {
-        VueChargementBornes(statutChargement:"Chargement complet")
+        VueDeChargement(statutChargement: "Chargement complet")
     }
 }

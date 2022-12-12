@@ -129,7 +129,7 @@ struct ContentView: View {
                 }// fin du géo
             } else {
                 // vue de chargement des bornes
-                VueChargementBornes(statutChargement: lireDonnees.ChargementExplication)
+                VueDeChargement(statutChargement: lireDonnees.ChargementExplication)
             }
         } // fin du if  lire borne
         //} // VStack
