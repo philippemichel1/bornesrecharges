@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct PinAnnotation: View {
-    let tailleTrameCercle:CGFloat = 35
-    let tailleImage:CGFloat = 12
-    let tailleTriangle:CGFloat = 10
+    let tailleTrameCercle:CGFloat = 45
+    let tailleImage:CGFloat = 22
+    let tailleTriangle:CGFloat = 13
     @Binding var masquerAnnotation:Bool
     
     var body: some View {
