@@ -17,13 +17,11 @@ struct VueDeChargement: View {
     var statutChargement:String
     var body: some View {
         HStack(spacing:0){
-            // withAnimation(.linear(duration: 200.0)){
             ForEach((0...nbrCapsule).reversed(), id: \.self) {capsule in
                 VueCapsule(largeur: $capsuleLargeur, hauteur: $hauteurCapsule[capsule], color: $couleurCapsule[capsule])
                     .animation(.linear(duration: 0.4),value: hauteurCapsule[capsule])
                     .onReceive(timer) { time in
                         hauteurCapsule[capsule] = valeurAleatoire.hauteurAleatoire()
-                        //}
                     }
             }
             
