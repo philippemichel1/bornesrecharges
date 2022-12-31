@@ -58,9 +58,10 @@ struct DetailsBornesVuePopup: View {
         .padding(5)
         .frame(width: 220, height: 200)
         .background(Color.gray.opacity(0.60)
-            .cornerRadius(10)
-            .shadow(color: .black.opacity(0.15), radius: 10, x: 3, y: -1))
-
+        .cornerRadius(10)
+        .shadow(color: .black.opacity(0.15), radius: 10, x: 3, y: -1))
+        //.position(x:UIScreen.main.bounds.width / 2,y:110)
+        
     }
 }
 
