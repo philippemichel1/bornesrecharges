@@ -22,6 +22,11 @@ struct ContentView: View {
     let milieu = UIScreen.main.bounds.height / 2
     let largeurEcran = UIScreen.main.bounds.width
     let hauteurEcran = UIScreen.main.bounds.height
+    let popupHauteur:CGFloat = 200
+    
+
+    
+
     
     var body: some View {
         NavigationView {
@@ -74,8 +79,6 @@ struct ContentView: View {
                                     if mesBornes.nom_station == BorneSelectionnee {
                                         ZStack(alignment: .top) {
                                                 DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
-                                                //.offset(y:-milieu)
-                                                    
                                         }
                                     }
                                 }
