@@ -44,7 +44,7 @@ struct ContentView: View {
                                 // .foregroundColor(.red)
                                 PinAnnotation(masquerAnnotation: $montrerPopup)
                                 //.opacity(montrerPopup ? 0 : 1)
-                                    .animation(Animation.linear(duration: 0.2))
+                                    .animation(Animation.linear(duration: 0.2),value: montrerPopup)
                                     .onTapGesture {
                                         withAnimation {
                                             BorneSelectionnee = mesBornes.nom_station

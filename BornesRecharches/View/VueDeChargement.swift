@@ -24,7 +24,6 @@ struct VueDeChargement: View {
                         hauteurCapsule[capsule] = valeurAleatoire.hauteurAleatoire()
                     }
             }
-            
             Text("\(statutChargement)")
                 .font(.caption2)
                 .multilineTextAlignment(.leading)
