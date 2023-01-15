@@ -17,6 +17,12 @@ struct ContentView: View {
     @State private var borneSelectionAffichee:Bool = false
     @State private var valeurPuissance:String = ""
     @State private var fenetreFiltre:Bool = false
+    let positionBoutonFermetureFenetreX:CGFloat = UIScreen.main.bounds.width - 13
+    let positionBoutonFermetureFenetreY:CGFloat = (UIScreen.main.bounds.height - UIScreen.main.bounds.height) + 20
+    let positionBoutonFiltreCommuneX:CGFloat = UIScreen.main.bounds.width - 13
+    let positionBoutonFiltreCommuneY:CGFloat =  (UIScreen.main.bounds.height - UIScreen.main.bounds.height) + 60
+    
+    
     
     //parametre écran
     let milieu = UIScreen.main.bounds.height / 2
@@ -24,9 +30,6 @@ struct ContentView: View {
     let hauteurEcran = UIScreen.main.bounds.height
     let popupHauteur:CGFloat = 200
     
-
-    
-
     
     var body: some View {
         NavigationView {
@@ -58,7 +61,7 @@ struct ContentView: View {
                                             CaracteristiquesBornesVue()
                                                 .frame(height:UIScreen.main.bounds.width - 10)
                                                 .presentationDetents([.fraction(0.49)])
-                                                .overlay(alignment:.topTrailing,content:  {
+                                                //.overlay(alignment:.topTrailing,content:  {
                                                     Button {
                                                         self.montrerPopup = false
                                                     } label: {
@@ -68,8 +71,9 @@ struct ContentView: View {
                                                             .foregroundColor(.primary)
                                                             .clipShape(Circle())
                                                             .padding(5)
+                                                            .position(x:positionBoutonFermetureFenetreX,y:positionBoutonFermetureFenetreY)
                                                     }
-                                                })
+                                                //})
                                         }
                                         
                                     }//fin carateristique bornes
@@ -78,7 +82,9 @@ struct ContentView: View {
                                 if montrerPopup {
                                     if mesBornes.nom_station == BorneSelectionnee {
                                         ZStack(alignment: .top) {
-                                                DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
+                                            DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
+                                            //2 .padding(.top,100)
+                                            
                                         }
                                     }
                                 }
@@ -114,9 +120,11 @@ struct ContentView: View {
                         })
                         // bouton localisation villes // tests
                         .overlay(alignment:.topLeading,content: {
+                            
                             Button {
                                 self.fenetreFiltre.toggle()
-                            } label: {
+                            } label:
+                            {
                                 Image(systemName: (fenetreFiltre) ? Ressources.image.filtre.rawValue : Ressources.image.aucunFiltre.rawValue)
                                     .padding()
                                     .background(.black.opacity(0.60))
@@ -125,7 +133,29 @@ struct ContentView: View {
                                     .foregroundColor(fenetreFiltre ? .green : .red)
                             }
                             
+                            
                         })
+                        .sheet(isPresented: $fenetreFiltre) {
+                            ZStack {
+                                VueFilltreCommunes()
+                                    .frame(height:UIScreen.main.bounds.width - 10)
+                                // .presentationDetents([.fraction(0.54)])
+                                    .presentationDetents([.medium, .large])
+                                //.overlay(alignment:.,content:  {
+                                Button {
+                                    self.fenetreFiltre.toggle()
+                                } label: {
+                                    Image(systemName: Ressources.image.fermer.rawValue)
+                                        .padding(5)
+                                        .font(.title2)
+                                        .foregroundColor(.primary)
+                                        .clipShape(Circle())
+                                        .padding(5)
+                                        .position(x:positionBoutonFermetureFenetreX,y:positionBoutonFermetureFenetreY)
+                                }
+                                //})
+                            }
+                        }
                         
                     } // fin Vstack
                     
