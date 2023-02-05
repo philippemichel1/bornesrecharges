@@ -15,10 +15,11 @@ import UIKit
     // tests à réaliser avec maxime
     var testBornes:[BorneModele] = []
     @Published var afficherCarte:Bool = false
-    @Published var chargementBorbes:Bool = false
+    @Published var chargementDonnees:Bool = false
     @Published var ChargementExplication = "Chargement en cours"
-    // lecture du fichier csv
+    @Published var listeVilles:[communes] = []
     
+    // lecture du fichier csv
     func lectureDonnees() async throws {
         let statusTache = Task { () in
             if let sourceFichier = URL(string: "https://titastus.com/wp-content/uploads/titastusdev/bornesrecharges/bornesrecharges.csv") {
@@ -96,7 +97,7 @@ import UIKit
             // tests à réaliser
             //Task {
             await MainActor.run {
-                self.chargementBorbes = true
+                self.chargementDonnees = true
                 self.ChargementExplication = "Chargement terminé"
                 
                 // test de chargement du tableau en une fois
@@ -112,13 +113,16 @@ import UIKit
         case .failure(let error):
             await MainActor.run {
                 self.ChargementExplication = "Error: \(error.localizedDescription)"
-                self.chargementBorbes = false
+                self.chargementDonnees = false
             }
             
         }
         
         //}
     }
+    
+    // acces lecture des communes
+    
     
     // suppression des guillemets
     func nettoyageChaine(chaine:String) -> String {
@@ -152,4 +156,57 @@ import UIKit
         }
         return resultatBooleen!
     }
+    
+    //Nouvelle methode IOS 15 pour le téléchargement de donnée et les taches asynchrone
+    @available(iOS 15.0.0, *)
+    func connexionJson() async  {
+        let statusTache = Task {() in
+            // verification chaine de type url
+            guard let urlString = URL(string: "https://geo.api.gouv.fr/communes") else {return}
+            do {
+                // connexion url session
+                let (mesDonnees, _) = try await URLSession.shared.data(from: urlString)
+                listeVilles = try JSONDecoder().decode([communes].self, from: mesDonnees)
+                trierVilleOrdreAlpha()
+            } catch {
+                print(error.localizedDescription)
+                self.chargementDonnees = false
+            }
+        }
+        let resultatTache = await statusTache.result
+        switch resultatTache {
+        case .success( _):
+            await MainActor.run {
+                self.ChargementExplication = "Chargement terminé"
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
+                    self.chargementDonnees = true
+                }
+            }
+            //} // fin de la tâche
+            
+            
+        case .failure(let error):
+            await MainActor.run {
+                self.ChargementExplication = "Error: \(error.localizedDescription)"
+                self.chargementDonnees = false
+            }
+            
+        }
+        
+    }
+    
+    
+    
+    //Trier element du tableau par ville par ordre alphabetique
+    func trierVilleOrdreAlpha()  {
+        listeVilles.sort {$0.nom < $1.nom}
+    }
+    
+    // trier les villes par nombre habitants descroissant
+    func trierVilleNBHabitantsDesCroissant() {
+        listeVilles.sort {$0.population ?? 0 > $1.population ?? 0}
+    }
+    
 }
+

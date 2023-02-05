@@ -28,11 +28,20 @@ struct Ressources {
         case nbr_bornes = "car.2.fill"
         case aucunFiltre = "tray.and.arrow.up.fill"
         case filtre = "tray.and.arrow.down.fill"
+        case visualiser = "eye.fill"
+        case deplaceCarte = "move.3d"
+        case deselection = "trash.fill"
+        
         
         
         // Liste des urls (images)
         enum urlString:String {
             case prisetype2 =  "https://titastus.com/wp-content/uploads/titastusdev/bornesrecharges/images/prise_type_2.jpeg"
         }
+        
+        
+            
+        
+        
     }
 }

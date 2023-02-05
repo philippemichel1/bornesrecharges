@@ -7,14 +7,19 @@
 
 import SwiftUI
 import MapKit
+import CoreLocation
 
 class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableObject {
     var manager:CLLocationManager = CLLocationManager()
     @Published var coordoneGeo:MKCoordinateRegion
     @Published var suivreUtilisateur:Bool = true
+    @Published var positionUtilisateur: PositionUtilisateur?
     var majPosition:CLLocation?
-    
+    var lieuVersCoordonnee:CLLocation?
     var span:MKCoordinateSpan
+    var positionSauvegarde:CLLocation?
+    private var geo = CLGeocoder()
+    
     
     init( _ localisation: CLLocation ) {
         span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -50,17 +55,44 @@ class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableO
     
     //recupérer une position
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if locations.first != nil {
+            positionSauvegarde = locations.first
+        }
         if let majPosition = locations.last {
             if ((majPosition == nil) || (majPosition != nil && suivreUtilisateur)) {
                 centrerPosition(nouvellePosition: majPosition)
             }
         }
-        
-        func centrerPosition(nouvellePosition: CLLocation) {
-            majPosition = nouvellePosition
-            coordoneGeo = MKCoordinateRegion(center: nouvellePosition.coordinate, span: span)
-            
-        }
+    }
+    //convertir un point géographique en localisation
+    func convertirCoordone(position: CLLocation) {
+        geo.reverseGeocodeLocation(position, completionHandler: geoCodeCompletion(resultat:erreur:))
+    }
+    
+    //Convertir un lieu en
+    func geoCodeCompletion(resultat: [CLPlacemark]?, erreur: Error?) {
+        guard let listeResultats = resultat?.last else {return}
+        let coordonee = listeResultats.location?.coordinate
+        let latitude = coordonee?.latitude ?? 0
+        let longitude = coordonee?.longitude ?? 0
+        let ville = listeResultats.locality ?? ""
+        let pays = listeResultats.country ?? ""
+        let nouvellePositionUtilisateur = PositionUtilisateur(latitude: latitude, longitude: longitude, ville: ville, pays: pays)
+        self.positionUtilisateur = nouvellePositionUtilisateur
+        lieuVersCoordonnee = CLLocation(latitude: latitude, longitude: longitude)
+        print("lieuVersCoordonnee: \(lieuVersCoordonnee!)")
+    }
+    
+    // convertir un lieu en point géographique
+    func convertirAdresse(adresse: String) {
+        suivreUtilisateur = false
+        manager.stopUpdatingLocation()
+        geo.geocodeAddressString(adresse, completionHandler: geoCodeCompletion(resultat:erreur:))
+    }
+    
+    func centrerPosition(nouvellePosition: CLLocation) {
+        majPosition = nouvellePosition
+        coordoneGeo = MKCoordinateRegion(center: nouvellePosition.coordinate, span: span)
     }
 }
 

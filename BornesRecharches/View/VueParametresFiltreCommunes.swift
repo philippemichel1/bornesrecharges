@@ -1,0 +1,139 @@
+//
+//  VueParametres.swift
+//  BornesRecharches
+//
+//  Created by Philippe MICHEL on 23/01/2023.
+//
+
+import SwiftUI
+
+struct VueParametresFiltreCommunes: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject private var accesDonnees:AccesDonnees = AccesDonnees()
+    @State var filtreRecherche: String = ""
+    @State var clavierAfficher:Bool = false
+    @State var communesSelectionnee: String = ""
+    @ObservedObject var parametres: ParametresFiltreCommune
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                if accesDonnees.chargementDonnees {
+                    Form {
+                        Label {
+                            Text(parametres.communeEstSelectionnee ? "Valider votre choix pour que la carte se déplace " : "Séléctionnez une communes  pour visualiser les bornes disponibles.")
+                            //.padding()
+                                .padding(.init(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                .lineLimit(nil)
+                                .multilineTextAlignment(.leading)
+                                .font(.system(size: 13))
+                                .foregroundColor(.primary)
+                            
+                        } icon: {
+                            Image(systemName: (parametres.communeEstSelectionnee) ? Ressources.image.deplaceCarte.rawValue : Ressources.image.visualiser.rawValue)
+                                .padding()
+                            // .font(.system(size: 13))
+                                .foregroundColor(.primary)
+                                .frame(width: 10, height: 10)
+                        }
+                    }// fin form
+                        ScrollView {
+                            LazyVStack() {
+                                //création d'une liste de ville
+                                ForEach(accesDonnees.listeVilles,id: \.code) {villeIndex  in
+                                    if filtreRecherche.isEmpty || villeIndex.nom.contains(filtreRecherche) || villeIndex.nom.lowercased().contains(filtreRecherche) {
+                                        HStack {
+                                            Text("\(villeIndex.nom)")
+                                                .font(.system(size: 13))
+                                                .foregroundColor(.primary)
+                                            
+                                            //Text("\(villeIndex.population ?? 0) Hab")
+                                            Button(action: {
+                                                self.parametres.communeEstSelectionnee .toggle()
+                                                if (villeIndex.nom == communesSelectionnee) {
+                                                    self.parametres.communeEstSelectionnee = false
+                                                    self.communesSelectionnee = ""
+                                                } else {
+                                                    self.parametres.communeEstSelectionnee = true
+                                                    self.communesSelectionnee = villeIndex.nom
+                                                }
+                                                print("estSelecttionne: \(parametres.communeEstSelectionnee)")
+                                                print("commune selection: \(communesSelectionnee)")
+                                                print("click sur: \(villeIndex.nom)")
+                                                
+                                                
+                                                if clavierAfficher {
+                                                    rentrerClavier()
+                                                }
+                                            }, label: {
+                                                Image(systemName: (villeIndex.nom == communesSelectionnee && parametres.communeEstSelectionnee == true) ? Ressources.image.deselection.rawValue : Ressources.image.visualiser.rawValue)
+                                                //Image(systemName: Ressources.image.visualiser.rawValue)
+                                                    .foregroundColor(villeIndex.nom == communesSelectionnee && parametres.communeEstSelectionnee == true ? Color("MonRouge") : Color("MonVert"))
+                                                
+                                            })
+                                        }
+                                    }
+                                    
+                                }
+                            } // fin LazyStack
+                        } // fin scrollView
+                        .frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
+                        .searchable(text: $filtreRecherche)
+                    Spacer()
+                    //}// fin form
+                } else {
+                    VueDeChargement(statutChargement: accesDonnees.ChargementExplication)
+                } // fin de if
+            } //fin Vstack
+            // bouton de la vue sheet
+            .navigationTitle("Paramètrage")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+//                        parametres.choixCouleurFond = self.choixCouleurFond
+//                        parametres.choixCouleurTexte = self.choixCouleurTexte
+//                        parametres.choixLangue = self.choixLangue
+//                        parametres.coinsArrondis = self.coinsArrondis
+//                        parametres.tailleCaratere = self.tailleCaractere
+                        if parametres.communeEstSelectionnee {
+                            parametres.parametreCommunes = self.communesSelectionnee
+                            parametres.filtreCarteActiver = true
+                        }
+                        
+                        dismiss()
+                    } label: {
+                        Image(systemName: (parametres.communeEstSelectionnee) ? Ressources.image.deplaceCarte.rawValue : Ressources.image.fermer.rawValue)
+                    }
+                    .interactiveDismissDisabled()
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            // chargement de donnee
+            .task {
+                await accesDonnees.connexionJson()
+            }
+            // lorsque ka vue s'ouvre
+            .onAppear {
+
+            }
+            //lorsque la vue se ferme
+            .onDisappear {
+                accesDonnees.listeVilles.removeAll()
+                
+                print("fenetre est fermé")
+            }
+            
+        }
+    }
+    //rentre le clavier
+    func rentrerClavier() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+struct VueParametres_Previews: PreviewProvider {
+    static var previews: some View {
+        VueParametresFiltreCommunes(parametres: ParametresFiltreCommune())
+    }
+}
