@@ -12,8 +12,12 @@ struct VueParametresFiltreCommunes: View {
     @StateObject private var accesDonnees:AccesDonnees = AccesDonnees()
     @State var filtreRecherche: String = ""
     @State var clavierAfficher:Bool = false
+    @State var ordreTriAlpha:Bool = true
     @State var communesSelectionnee: String = ""
+    var pictogramme:[String] = ["abc", "figure.stand"]
+    @State  var selection:Int = 1
     @ObservedObject var parametres: ParametresFiltreCommune
+    @StateObject var localiseLieu:LocaliseLieuViewModel = LocaliseLieuViewModel()
     
     var body: some View {
         NavigationStack {
@@ -37,6 +41,21 @@ struct VueParametresFiltreCommunes: View {
                                 .frame(width: 10, height: 10)
                         }
                     }// fin form
+                    Picker("", selection: $selection) {
+                        ForEach(0..<pictogramme.count) {choix in
+                            Image(systemName: pictogramme[choix])
+                                .onChange(of: selection) { ValeurChoisit in
+                                    if ValeurChoisit == 0 {
+                                        accesDonnees.trierVilleOrdreAlpha()
+                                    } else {
+                                        accesDonnees.trierVilleNBHabitantsDesCroissant()
+                                    }
+                                    
+                                }
+                            
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                         ScrollView {
                             LazyVStack() {
                                 //création d'une liste de ville
@@ -57,10 +76,9 @@ struct VueParametresFiltreCommunes: View {
                                                     self.parametres.communeEstSelectionnee = true
                                                     self.communesSelectionnee = villeIndex.nom
                                                 }
-                                                print("estSelecttionne: \(parametres.communeEstSelectionnee)")
-                                                print("commune selection: \(communesSelectionnee)")
-                                                print("click sur: \(villeIndex.nom)")
-                                                
+                                                //print("estSelecttionne: \(parametres.communeEstSelectionnee)")
+                                                //print("commune selection: \(communesSelectionnee)")
+                                                //print("click sur: \(villeIndex.nom)")
                                                 
                                                 if clavierAfficher {
                                                     rentrerClavier()
@@ -91,14 +109,8 @@ struct VueParametresFiltreCommunes: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-//                        parametres.choixCouleurFond = self.choixCouleurFond
-//                        parametres.choixCouleurTexte = self.choixCouleurTexte
-//                        parametres.choixLangue = self.choixLangue
-//                        parametres.coinsArrondis = self.coinsArrondis
-//                        parametres.tailleCaratere = self.tailleCaractere
                         if parametres.communeEstSelectionnee {
                             parametres.parametreCommunes = self.communesSelectionnee
-                            parametres.filtreCarteActiver = true
                         }
                         
                         dismiss()
@@ -106,7 +118,9 @@ struct VueParametresFiltreCommunes: View {
                         Image(systemName: (parametres.communeEstSelectionnee) ? Ressources.image.deplaceCarte.rawValue : Ressources.image.fermer.rawValue)
                     }
                     .interactiveDismissDisabled()
-                    .buttonStyle(.borderedProminent)
+                    .foregroundColor(.primary)
+                    //.buttonStyle(.borderedProminent).foregroundColor(.primary)
+                    
                 }
             }
             // chargement de donnee
@@ -119,6 +133,7 @@ struct VueParametresFiltreCommunes: View {
             }
             //lorsque la vue se ferme
             .onDisappear {
+                parametres.filtreCarteActiver = true
                 accesDonnees.listeVilles.removeAll()
                 
                 print("fenetre est fermé")

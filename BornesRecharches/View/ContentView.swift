@@ -13,13 +13,14 @@ struct ContentView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject var lireDonnees:AccesDonnees = AccesDonnees()
     @StateObject var suivreUtilisateur:SuiviUtilisateurViewModel = SuiviUtilisateurViewModel(CLLocation(latitude: 0, longitude: 0))
+    @StateObject var localiseLieu:LocaliseLieuViewModel = LocaliseLieuViewModel()
     @State private var montrerPopup:Bool = false
     @State private var BorneSelectionnee:String = ""
     @State private var montrerFenetre:Bool = false // pour suppression
     @State private var borneSelectionAffichee:Bool = false
     @State private var valeurPuissance:String = ""
     @ObservedObject var parametres = ParametresFiltreCommune()
-
+    
     //parametre écran
     let milieu = UIScreen.main.bounds.height / 2
     let largeurEcran = UIScreen.main.bounds.width
@@ -37,7 +38,6 @@ struct ContentView: View {
                         Map(coordinateRegion: $suivreUtilisateur.coordoneGeo, interactionModes: .all, showsUserLocation: true, userTrackingMode: .none, annotationItems: lireDonnees.listeBornes, annotationContent: { mesBornes in
                             MapAnnotation(coordinate: mesBornes.coordonneGeo(), anchorPoint: CGPoint(x: 0.5, y: 0.5)) {
                                 PinAnnotation(masquerAnnotation: $montrerPopup)
-                                //.opacity(montrerPopup ? 0 : 1)
                                     .animation(Animation.linear(duration: 0.2),value: montrerPopup)
                                     .onTapGesture {
                                         withAnimation {
@@ -50,13 +50,12 @@ struct ContentView: View {
                                 if montrerPopup {
                                     if mesBornes.nom_station == BorneSelectionnee {
                                         //GeometryReader { Proxy in
-                                            //let distance = Proxy.safeAreaInsets
-                                            ZStack(alignment: .top) {
-                                                DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
-                                                
-                                            }
+                                        //let distance = Proxy.safeAreaInsets
+                                        ZStack(alignment: .top) {
+                                            DetailsBornesVuePopup(libelle: .constant(mesBornes.nom_station), adresse: .constant(mesBornes.adresse_station), latitudeSTR: .constant(String(mesBornes.consolidated_latitude)), longitudeSTR: .constant(String(mesBornes.consolidated_longitude)), montrerFenetreDetail:$montrerFenetre)
+                                            
+                                        }
                                         //}
-                                        
                                     }
                                 }
                                 
@@ -66,19 +65,19 @@ struct ContentView: View {
                         //demande de filtre carte sur autre commune
                         .onChange(of: parametres.filtreCarteActiver, perform: { newValue in
                             if newValue == true {
-                                suivreUtilisateur.convertirAdresse(adresse: parametres.parametreCommunes)
-                               // if suivreUtilisateur.lieuVersCoordonnee !=  nil {
-                                    //suivreUtilisateur.centrerPosition(nouvellePosition: (suivreUtilisateur.lieuVersCoordonnee ?? suivreUtilisateur.positionSauvegarde)!)
-                                //}
-                    
+                                 localiseLieu.convertirAdresse(adresse: parametres.parametreCommunes)
                                 
+                                if localiseLieu.lieuVersCoordonnee !=  nil {
+                                   suivreUtilisateur.centrerPosition(nouvellePosition: (localiseLieu.lieuVersCoordonnee!))
+                                } else {
+                                    print("lieuVersCoordonnee: \(String(describing: localiseLieu.lieuVersCoordonnee))")
+                                }
                                 
                                 ZStack {
                                     Text(" ma: \(parametres.parametreCommunes)")
                                         .frame(width: 200,height: 200)
                                 }
                                 print("Déplacer carte")
-                                
                                 parametres.filtreCarteActiver = false
                             }
                         })
@@ -94,6 +93,7 @@ struct ContentView: View {
                         .gesture(DragGesture().onChanged({ value in
                             if suivreUtilisateur.suivreUtilisateur == true {
                                 suivreUtilisateur.suivreUtilisateur = false
+                                suivreUtilisateur.montrerPosition()
                             }
                         }))
                         //.ignoresSafeArea(.container, edges: [.top, .vertical])
@@ -109,6 +109,11 @@ struct ContentView: View {
                         .overlay(alignment:.topTrailing,content: {
                             Button {
                                 suivreUtilisateur.suivreUtilisateur.toggle()
+                                if suivreUtilisateur.suivreUtilisateur == true {
+                                    suivreUtilisateur.montrerPosition()
+                                } else {
+                                    suivreUtilisateur.montrerPosition()
+                                }
                             } label: {
                                 Image(systemName: (suivreUtilisateur.suivreUtilisateur) ? Ressources.image.localiser.rawValue : Ressources.image.nonLocaliser.rawValue)
                                     .padding()
@@ -125,7 +130,7 @@ struct ContentView: View {
                                 parametres.montrerParametre = true
                             } label:
                             {
-                               Image(systemName: (parametres.montrerParametre) ? Ressources.image.filtre.rawValue : Ressources.image.aucunFiltre.rawValue)
+                                Image(systemName: (parametres.montrerParametre) ? Ressources.image.filtre.rawValue : Ressources.image.aucunFiltre.rawValue)
                                     .padding()
                                     .background(.black.opacity(0.60))
                                     .font(.title2)

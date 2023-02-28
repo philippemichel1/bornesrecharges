@@ -75,10 +75,13 @@ import UIKit
                     if nom_station != "\"nom_station(9)\"" {
                         let mesBornes = BorneModele(nom_station: nom_station, adresse_station: adresse_station,puissance_nominale: puissance_nominale, consolidated_longitude: consolidated_longitude, consolidated_latitude: consolidated_latitude, prise_type_ef: prise_type_ef, prise_type_2: prise_type_2, prise_type_combo_ccs: prise_type_combo_ccs, prise_type_chademo: prise_type_chademo,prise_type_autre:prise_type_autre,num_pdl:num_pdl,nbre_pdc:nbre_pdc, paiement_acte:paiement_acte, gratuit: gratuit, paiement_cb: paiement_cb,paiement_autre: paiement_autre, condition_acces: condition_acces, accessibilite_pmr:accessibilite_pmr,station_deux_roues:station_deux_roues, raccordement:raccordement)
                         
-                        
-                        //DispatchQueue.main.async {
-                        await MainActor.run {
-                            self.listeBornes.append(mesBornes)
+                        // limite le nombre de point dans le tableau
+                        if listeBornes.count < 100 {
+                            //DispatchQueue.main.async {
+                            await MainActor.run {
+                                self.listeBornes.append(mesBornes)
+                        }
+                       
                             
                             
                             // tests avec chargement du tableau en une fois même probleme
@@ -121,7 +124,6 @@ import UIKit
         //}
     }
     
-    // acces lecture des communes
     
     
     // suppression des guillemets
@@ -157,6 +159,8 @@ import UIKit
         return resultatBooleen!
     }
     
+    
+    // acces lecture des communes
     //Nouvelle methode IOS 15 pour le téléchargement de donnée et les taches asynchrone
     @available(iOS 15.0.0, *)
     func connexionJson() async  {
@@ -167,7 +171,7 @@ import UIKit
                 // connexion url session
                 let (mesDonnees, _) = try await URLSession.shared.data(from: urlString)
                 listeVilles = try JSONDecoder().decode([communes].self, from: mesDonnees)
-                trierVilleOrdreAlpha()
+                trierVilleNBHabitantsDesCroissant()
             } catch {
                 print(error.localizedDescription)
                 self.chargementDonnees = false

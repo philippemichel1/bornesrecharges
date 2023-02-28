@@ -117,6 +117,7 @@ struct CaracteristiquesBornesVue: View {
                             Image(systemName: Ressources.image.fermer.rawValue)
                         }
                         .interactiveDismissDisabled()
+                        .foregroundColor(.primary)
                     }
                 }
                 .onDisappear {
