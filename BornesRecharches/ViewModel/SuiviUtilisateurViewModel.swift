@@ -15,10 +15,9 @@ class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableO
     @Published var suivreUtilisateur:Bool = true
     @Published var positionUtilisateur: PositionUtilisateur?
     var majPosition:CLLocation?
-    //var lieuVersCoordonnee:CLLocation?
     var span:MKCoordinateSpan
-    //var positionSauvegarde:CLLocation?
-    //private var geo = CLGeocoder()
+    var positionSauvegarde:CLLocation?
+    private var geo = CLGeocoder()
     
     
     init( _ localisation: CLLocation ) {
@@ -47,7 +46,6 @@ class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableO
         }
     }
     
-    
     //erreur de localisation
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error.localizedDescription)
@@ -56,38 +54,35 @@ class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableO
     //recupérer une position
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let majPosition = locations.last {
-            //positionSauvegarde = locations.last
             if ((majPosition == nil) || (majPosition != nil && suivreUtilisateur)) {
                 centrerPosition(nouvellePosition: majPosition)
             }
         }
     }
-//    //convertir un point géographique en localisation
-//    func convertirCoordone(position: CLLocation) {
-//        geo.reverseGeocodeLocation(position, completionHandler: geoCodeCompletion(resultat:erreur:))
-//    }
-//
 //    //Convertir un lieu en
-//    func geoCodeCompletion(resultat: [CLPlacemark]?, erreur: Error?) {
-//        guard let listeResultats = resultat?.last else {return}
-//        let coordonee = listeResultats.location?.coordinate
-//        let latitude = coordonee?.latitude ?? 0
-//        let longitude = coordonee?.longitude ?? 0
-//        let ville = listeResultats.locality ?? ""
-//        let pays = listeResultats.country ?? ""
-//        let nouvellePositionUtilisateur = PositionUtilisateur(latitude: latitude, longitude: longitude, ville: ville, pays: pays)
-//        self.positionUtilisateur = nouvellePositionUtilisateur
-//        lieuVersCoordonnee = CLLocation(latitude: latitude, longitude: longitude)
-//        print("Lieu vers coordonnée lors de l'appel: \(lieuVersCoordonnee!)")
-//    }
-//
-//    // convertir un lieu en point géographique
-//    func convertirAdresse(adresse: String) {
-//       //suivreUtilisateur = false
-//        //montrerPosition()
-//        //manager.stopUpdatingLocation()
-//        geo.geocodeAddressString(adresse, completionHandler: geoCodeCompletion(resultat:erreur:))
-//    }
+    func geoCodeCompletion(resultat: [CLPlacemark]?, erreur: Error?) {
+        guard let listeResultats = resultat?.last else {return}
+        let coordonee = listeResultats.location?.coordinate
+        let latitude = coordonee?.latitude ?? 0
+        let longitude = coordonee?.longitude ?? 0
+        let ville = listeResultats.locality ?? ""
+        let pays = listeResultats.country ?? ""
+        let nouvellePositionUtilisateur = PositionUtilisateur(latitude: latitude, longitude: longitude, ville: ville, pays: pays)
+        self.positionUtilisateur = nouvellePositionUtilisateur
+      let lieuVersCoordonnee = CLLocation(latitude: latitude, longitude: longitude)
+       
+    // afficher la zone choisie sur la carte 
+        if lieuVersCoordonnee != nil {
+            centrerPosition(nouvellePosition: lieuVersCoordonnee)
+        }
+    }
+
+// convertir un lieu en point géographique
+    func convertirAdresse(adresse: String) {
+       suivreUtilisateur = false
+        montrerPosition()
+        geo.geocodeAddressString(adresse, completionHandler: geoCodeCompletion(resultat:erreur:))
+    }
     // centrer la position
     func centrerPosition(nouvellePosition: CLLocation) {
         majPosition = nouvellePosition

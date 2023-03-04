@@ -13,7 +13,6 @@ struct ContentView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject var lireDonnees:AccesDonnees = AccesDonnees()
     @StateObject var suivreUtilisateur:SuiviUtilisateurViewModel = SuiviUtilisateurViewModel(CLLocation(latitude: 0, longitude: 0))
-    @StateObject var localiseLieu:LocaliseLieuViewModel = LocaliseLieuViewModel()
     @State private var montrerPopup:Bool = false
     @State private var BorneSelectionnee:String = ""
     @State private var montrerFenetre:Bool = false // pour suppression
@@ -26,7 +25,6 @@ struct ContentView: View {
     let largeurEcran = UIScreen.main.bounds.width
     let hauteurEcran = UIScreen.main.bounds.height
     let popupHauteur:CGFloat = 200
-    
     
     var body: some View {
         NavigationStack {
@@ -65,19 +63,7 @@ struct ContentView: View {
                         //demande de filtre carte sur autre commune
                         .onChange(of: parametres.filtreCarteActiver, perform: { newValue in
                             if newValue == true {
-                                 localiseLieu.convertirAdresse(adresse: parametres.parametreCommunes)
-                                
-                                if localiseLieu.lieuVersCoordonnee !=  nil {
-                                   suivreUtilisateur.centrerPosition(nouvellePosition: (localiseLieu.lieuVersCoordonnee!))
-                                } else {
-                                    print("lieuVersCoordonnee: \(String(describing: localiseLieu.lieuVersCoordonnee))")
-                                }
-                                
-                                ZStack {
-                                    Text(" ma: \(parametres.parametreCommunes)")
-                                        .frame(width: 200,height: 200)
-                                }
-                                print("Déplacer carte")
+                                suivreUtilisateur.convertirAdresse(adresse: parametres.parametreCommunes)
                                 parametres.filtreCarteActiver = false
                             }
                         })

@@ -17,7 +17,7 @@ struct VueParametresFiltreCommunes: View {
     var pictogramme:[String] = ["abc", "figure.stand"]
     @State  var selection:Int = 1
     @ObservedObject var parametres: ParametresFiltreCommune
-    @StateObject var localiseLieu:LocaliseLieuViewModel = LocaliseLieuViewModel()
+    
     
     var body: some View {
         NavigationStack {
