@@ -17,6 +17,7 @@ struct VueParametresFiltreCommunes: View {
     var pictogramme:[String] = ["abc", "figure.stand"]
     @State  var selection:Int = 1
     @ObservedObject var parametres: ParametresFiltreCommune
+    @FocusState var focusSearch:Bool
     
     
     var body: some View {
@@ -70,9 +71,11 @@ struct VueParametresFiltreCommunes: View {
                                             if (villeIndex.nom == communesSelectionnee) {
                                                 self.parametres.communeEstSelectionnee = false
                                                 self.communesSelectionnee = ""
+                                                self.focusSearch = false
                                             } else {
                                                 self.parametres.communeEstSelectionnee = true
                                                 self.communesSelectionnee = villeIndex.nom
+                                                self.focusSearch = false
                                             }
                                             
                                             
@@ -89,10 +92,15 @@ struct VueParametresFiltreCommunes: View {
                                 }// fin if filtre
                                 
                             }
+                            .searchable(text: $filtreRecherche,prompt: "Rechercher communes")
+                             .focused($focusSearch)
                         } // fin LazyStack
                     } // fin scrollView
                     .frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
-                    .searchable(text: $filtreRecherche)
+                    
+                    
+                    
+                    
                     Spacer()
                     //}// fin form
                 } else {
