@@ -16,7 +16,6 @@ class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableO
     @Published var positionUtilisateur: PositionUtilisateur?
     var majPosition:CLLocation?
     var span:MKCoordinateSpan
-    var positionSauvegarde:CLLocation?
     private var geo = CLGeocoder()
     
     
@@ -71,7 +70,7 @@ class SuiviUtilisateurViewModel:NSObject, CLLocationManagerDelegate, ObservableO
         self.positionUtilisateur = nouvellePositionUtilisateur
       let lieuVersCoordonnee = CLLocation(latitude: latitude, longitude: longitude)
        
-    // afficher la zone choisie sur la carte 
+    // afficher la zone choisie sur la carte
         if lieuVersCoordonnee != nil {
             centrerPosition(nouvellePosition: lieuVersCoordonnee)
         }

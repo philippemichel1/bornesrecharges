@@ -52,51 +52,47 @@ struct VueParametresFiltreCommunes: View {
                                     }
                                     
                                 }
-                            
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
-                        ScrollView {
-                            LazyVStack() {
-                                //création d'une liste de ville
-                                ForEach(accesDonnees.listeVilles,id: \.code) {villeIndex  in
-                                    if filtreRecherche.isEmpty || villeIndex.nom.contains(filtreRecherche) || villeIndex.nom.lowercased().contains(filtreRecherche) {
-                                        HStack {
-                                            Text("\(villeIndex.nom)")
-                                                .font(.system(size: 13))
-                                                .foregroundColor(.primary)
+                    Spacer()
+                    ScrollView {
+                        LazyVStack() {
+                            //création d'une liste de ville
+                            ForEach(accesDonnees.listeVilles,id: \.code) {villeIndex  in
+                                if filtreRecherche.isEmpty || villeIndex.nom.contains(filtreRecherche) || villeIndex.nom.lowercased().contains(filtreRecherche) {
+                                    HStack {
+                                        Text("\(villeIndex.nom)")
+                                            .font(.system(size: 13))
+                                            .foregroundColor(.primary)
+                                        Button(action: {
+                                            self.parametres.communeEstSelectionnee .toggle()
+                                            if (villeIndex.nom == communesSelectionnee) {
+                                                self.parametres.communeEstSelectionnee = false
+                                                self.communesSelectionnee = ""
+                                            } else {
+                                                self.parametres.communeEstSelectionnee = true
+                                                self.communesSelectionnee = villeIndex.nom
+                                            }
                                             
-                                            //Text("\(villeIndex.population ?? 0) Hab")
-                                            Button(action: {
-                                                self.parametres.communeEstSelectionnee .toggle()
-                                                if (villeIndex.nom == communesSelectionnee) {
-                                                    self.parametres.communeEstSelectionnee = false
-                                                    self.communesSelectionnee = ""
-                                                } else {
-                                                    self.parametres.communeEstSelectionnee = true
-                                                    self.communesSelectionnee = villeIndex.nom
-                                                }
-                                                //print("estSelecttionne: \(parametres.communeEstSelectionnee)")
-                                                //print("commune selection: \(communesSelectionnee)")
-                                                //print("click sur: \(villeIndex.nom)")
-                                                
-                                                if clavierAfficher {
-                                                    rentrerClavier()
-                                                }
-                                            }, label: {
-                                                Image(systemName: (villeIndex.nom == communesSelectionnee && parametres.communeEstSelectionnee == true) ? Ressources.image.deselection.rawValue : Ressources.image.visualiser.rawValue)
-                                                //Image(systemName: Ressources.image.visualiser.rawValue)
-                                                    .foregroundColor(villeIndex.nom == communesSelectionnee && parametres.communeEstSelectionnee == true ? Color("MonRouge") : Color("MonVert"))
-                                                
-                                            })
-                                        }
+                                            
+                                            if clavierAfficher {
+                                                rentrerClavier()
+                                            }
+                                        }, label: {
+                                            Image(systemName: (villeIndex.nom == communesSelectionnee && parametres.communeEstSelectionnee == true) ? Ressources.image.deselection.rawValue : Ressources.image.visualiser.rawValue)
+                                            //Image(systemName: Ressources.image.visualiser.rawValue)
+                                                .foregroundColor(villeIndex.nom == communesSelectionnee && parametres.communeEstSelectionnee == true ? Color("MonRouge") : Color("MonVert"))
+                                            
+                                        })
                                     }
-                                    
-                                }
-                            } // fin LazyStack
-                        } // fin scrollView
-                        .frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
-                        .searchable(text: $filtreRecherche)
+                                }// fin if filtre
+                                
+                            }
+                        } // fin LazyStack
+                    } // fin scrollView
+                    .frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
+                    .searchable(text: $filtreRecherche)
                     Spacer()
                     //}// fin form
                 } else {
@@ -129,7 +125,7 @@ struct VueParametresFiltreCommunes: View {
             }
             // lorsque ka vue s'ouvre
             .onAppear {
-
+                
             }
             //lorsque la vue se ferme
             .onDisappear {
