@@ -9,6 +9,7 @@ import SwiftUI
 
 struct VueParametresFiltreCommunes: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.dismissSearch) private var dismissSearch
     @StateObject private var accesDonnees:AccesDonnees = AccesDonnees()
     @State var filtreRecherche: String = ""
     @State var clavierAfficher:Bool = false
@@ -24,11 +25,10 @@ struct VueParametresFiltreCommunes: View {
         NavigationStack {
             VStack(spacing: 0) {
                 if accesDonnees.chargementDonnees {
-                    Form {
+                   //Form {
                         Label {
                             Text(parametres.communeEstSelectionnee ? "Valider votre choix pour que la carte se déplace " : "Séléctionnez une communes  pour visualiser les bornes disponibles.")
-                            //.padding()
-                                .padding(.init(top: 0, leading: 10, bottom: 0, trailing: 10))
+                                .padding(parametres.communeEstSelectionnee ? EdgeInsets(top: 0, leading: 10, bottom: 15, trailing: 10) :  EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                                 .lineLimit(nil)
                                 .multilineTextAlignment(.leading)
                                 .font(.system(size: 13))
@@ -41,7 +41,10 @@ struct VueParametresFiltreCommunes: View {
                                 .foregroundColor(.primary)
                                 .frame(width: 10, height: 10)
                         }
-                    }// fin form
+                   // }// fin form
+                   .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+        
+                    Spacer()
                     Picker("", selection: $selection) {
                         ForEach(0..<pictogramme.count) {choix in
                             Image(systemName: pictogramme[choix])
@@ -56,7 +59,8 @@ struct VueParametresFiltreCommunes: View {
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
-                    Spacer()
+                    .padding(EdgeInsets(top: 0.5, leading: 10, bottom: 0.5, trailing: 10))
+                   Spacer()
                     ScrollView {
                         LazyVStack() {
                             //création d'une liste de ville
@@ -72,10 +76,12 @@ struct VueParametresFiltreCommunes: View {
                                                 self.parametres.communeEstSelectionnee = false
                                                 self.communesSelectionnee = ""
                                                // self.focusSearch = false
+                                                //dismissSearch()
                                             } else {
                                                 self.parametres.communeEstSelectionnee = true
                                                 self.communesSelectionnee = villeIndex.nom
                                                 //self.focusSearch = false
+                                                //dismissSearch()
                                             }
                                             
                                             
@@ -95,13 +101,11 @@ struct VueParametresFiltreCommunes: View {
                             // .focused($focusSearch)
                         } // fin LazyStack
                     } // fin scrollView
-                    .frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
-                    .searchable(text: $filtreRecherche,prompt: "Rechercher communes")
-                    
-                    
-                    
-                    
+                    //.padding(EdgeInsets(top: 0.5, leading: 10, bottom: 0.5, trailing: 10))
+                    //.frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
                     Spacer()
+                    .searchable(text: $filtreRecherche,prompt: "Rechercher commune")
+                    
                     //}// fin form
                 } else {
                     VueDeChargement(statutChargement: accesDonnees.ChargementExplication)
