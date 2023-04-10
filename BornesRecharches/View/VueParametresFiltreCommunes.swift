@@ -104,7 +104,7 @@ struct VueParametresFiltreCommunes: View {
                     //.padding(EdgeInsets(top: 0.5, leading: 10, bottom: 0.5, trailing: 10))
                     //.frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
                     Spacer()
-                    .searchable(text: $filtreRecherche,prompt: "Rechercher commune")
+                        .searchable(text: $filtreRecherche, placement: .automatic,prompt: "Rechercher commune")
                     
                     //}// fin form
                 } else {
