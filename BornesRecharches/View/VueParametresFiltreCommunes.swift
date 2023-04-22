@@ -25,6 +25,7 @@ struct VueParametresFiltreCommunes: View {
         NavigationStack {
             VStack(spacing: 0) {
                 if accesDonnees.chargementDonnees {
+                    VueSearchBar(filtreRecherche: $filtreRecherche)
                    //Form {
                         Label {
                             Text(parametres.communeEstSelectionnee ? "Valider votre choix pour que la carte se déplace " : "Séléctionnez une communes  pour visualiser les bornes disponibles.")
@@ -75,8 +76,6 @@ struct VueParametresFiltreCommunes: View {
                                             if (villeIndex.nom == communesSelectionnee) {
                                                 self.parametres.communeEstSelectionnee = false
                                                 self.communesSelectionnee = ""
-                                               // self.focusSearch = false
-                                                //dismissSearch()
                                             } else {
                                                 self.parametres.communeEstSelectionnee = true
                                                 self.communesSelectionnee = villeIndex.nom
@@ -104,7 +103,9 @@ struct VueParametresFiltreCommunes: View {
                     //.padding(EdgeInsets(top: 0.5, leading: 10, bottom: 0.5, trailing: 10))
                     //.frame(width: UIScreen.main.bounds.width - 10,height: UIScreen.main.bounds.height / 5)
                     Spacer()
-                        .searchable(text: $filtreRecherche, placement: .automatic,prompt: "Rechercher commune")
+                      //  .searchable(text: $filtreRecherche, placement: .automatic,prompt: "Rechercher commune")
+                        
+                        
                     
                     //}// fin form
                 } else {
