@@ -28,6 +28,7 @@ struct VueSearchBar: View {
                 }, label: {
                     Text("Annuler")
                         .foregroundColor(.primary)
+                        .font(.caption2)
                 })
             }
         }
