@@ -9,23 +9,30 @@ import SwiftUI
 
 struct VueSearchBar: View {
     @Binding var filtreRecherche:String
+    @FocusState var focusFiltreRecherche:Bool
     var body: some View {
         HStack {
-            TextField("Rechercher une commune", text: $filtreRecherche)
-                .padding(.horizontal, 10)
-                .frame(height: 36)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal, 10)
-            Button(action: {
-                filtreRecherche = ""
-            }, label: {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.primary)
-            })
-            .padding(.trailing, 10)
+            HStack {
+                Image(systemName: Ressources.image.rechercher.rawValue)
+                    .background(Color(.systemGray6))
+                TextField("Commune", text: $filtreRecherche)
+                    .focused($focusFiltreRecherche)
+            }
+            .padding(4)
+            .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.gray,lineWidth: 1))
+            if focusFiltreRecherche {
+                Button(action: {
+                    filtreRecherche = ""
+                    focusFiltreRecherche = false
+                }, label: {
+                    Text("Annuler")
+                        .foregroundColor(.primary)
+                })
+            }
         }
-        .frame(height: 44)    }
+        .padding()
+    }
+    
 }
 
 struct VueSearchBar_Previews: PreviewProvider {

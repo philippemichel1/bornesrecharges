@@ -31,6 +31,7 @@ struct Ressources {
         case visualiser = "eye.fill"
         case deplaceCarte = "move.3d"
         case deselection = "trash.fill"
+        case rechercher = "magnifyingglass"
         
         
         
