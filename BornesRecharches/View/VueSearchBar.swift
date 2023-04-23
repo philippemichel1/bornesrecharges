@@ -15,7 +15,8 @@ struct VueSearchBar: View {
             HStack {
                 Image(systemName: Ressources.image.rechercher.rawValue)
                     .background(Color(.systemGray6))
-                TextField("Commune", text: $filtreRecherche)
+                TextField("Commune(s)", text: $filtreRecherche)
+                    .keyboardType(.default)
                     .focused($focusFiltreRecherche)
             }
             .padding(4)
